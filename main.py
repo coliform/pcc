@@ -3,23 +3,32 @@
 # raise Exception for valid compilation errors
 # assert for compiler issues
 
-import pcc_structures
+from pcc_structures import *
+from pcc_constants import *
 import pcc_utils
-import pcc_constants
+
+type_table = pcc_type_table()
+literal_table = pcc_literal_table()
 
 
 # PHASE 1
 # 1.1 - read file
-s = ""
-with open("file.c","r") as f: s=f.read()
+source = ""
+with open("file.c","r") as f: source=f.read()
 # 1.2 - replace trigraph characters
-for key,value in pcc_constants.trigraphs: s = s.replace(key,value)
+for key,value in trigraphs: source = source.replace(key,value)
 
 
 # PHASE 2
 # 2.1 - replace \\n with nothing
-s = s.replace("\\\n","")
+source = source.replace("\\\n","")
 
 
 # PHASE 3
-s = pcc_utils.remove_comments(s)
+source = pcc_utils.remove_comments(source)
+while segment := find_next_string(source):
+    (start_i,end_i) = segment
+    literal_table += source[start_i:end_i]
+    source = source[:start_i] + pcc_literal_token + source[end_i+1:]
+source = remove_excessive_whitespace(source)
+

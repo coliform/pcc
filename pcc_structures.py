@@ -84,6 +84,10 @@ class pcc_expression:
 class pcc_literal:
     def __init__(self, _content):
         self._content = _content
+    
+    def __add__(self, other):
+        self._content += other._content
+    def __radd__(self, other): self.__add__(other)
 
 
 class pcc_literal_table:
@@ -96,6 +100,28 @@ class pcc_literal_table:
         self.__add__(_literal)
     def __getitem__(self,i):
         return self._literals[i]
+    
+    def join(self, i, j):
+        literals = self._literals[:i]
+        newliteral = self._literals[i]
+        i+=1
+        while i<j:
+            newliteral+=self._literal[i]
+            i+=1
+        literals.append(newliteral)
+        literals += self._literals[j:]
+        self._literals = literals
+
+
+class pcc_lvalue:
+    def __init__(self):
+        pass
+
+
+class pcc_rvalue:
+    def __init__(self):
+        pass
+
 
 
 class pcc_single_expression(pcc_expression):

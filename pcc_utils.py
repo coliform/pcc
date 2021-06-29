@@ -1,5 +1,6 @@
 import string
 import re
+from pcc_constants import *
 
 def is_lambda(v):
   LAMBDA = lambda:0
@@ -101,3 +102,31 @@ def find_next_not_in_string(haystack, needle, start):
         i -= 1
     if i==-1: return start+find_first_not_in_string(haystack[start:],needle)
     else: return i+find_first_not_in_string()
+
+def find_next_string(haystack, start=0):
+    string_chars = ['\'', '\"']
+    start_char = None
+    start_i = start
+    l = len(haystack)
+    i = start
+    if i < 0 or i >= l: return (-1,-1)
+    while i < l:
+        if haystack[i] in string_chars:
+            start_char = haystack[i]
+            i+=1
+            start_i = i
+            while i < l:
+                if haystack[i]=="\\": i+=2
+                elif haystack[i]==start_char: return (start_i,i)
+                else: i+=1
+        i+=1
+    return (-1,-1)
+
+def replace_next_string_with_token(haystack, token=pcc_literal_token):
+    (si, ei) = find_next_string(haystack)
+    if si == -1: return None
+    s = haystack[si:ei]
+    return haystack[:si+1]+haystack[ei:]
+
+def remove_excessive_whitespace(s):
+    return " ".join(s.split())

@@ -64,6 +64,7 @@ class pcc_identifier_table(pcc_base_table):
 
 class pcc_expression:
     def __init__(self, _exp1, _operator=None, _exp2=None, _cast=None):
+        assert(type(_cast)==pcc_type)
         assert((_operator is None and _exp2 is None) or (_operator is not None and _exp2 is not None))
         self._exp1 = _exp1
         self._exp2 = _exp2

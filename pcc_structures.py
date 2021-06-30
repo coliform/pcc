@@ -1,6 +1,18 @@
 from pcc_utils import *
 from enum import Enum
 
+class pcc_base_table:
+    def __init__(self):
+        self._items = []
+    
+    def __getitem__(self, _name):
+        for item in self._items:
+            if item._name == _name: return item
+        return None
+    
+    def __contains__(self, _name):
+        return self[_name] is not None
+
 class pcc_type:
     def __init__(self, _name, _size, _is_compatible):
         assert(is_str(_name) and is_int(_size) and is_lambda(_is_compatible))
@@ -13,28 +25,16 @@ class pcc_type:
         assert(type(other_type)==pcc_type)
         return self._size <= other_type._size 
 
-
-
-class pcc_type_table:
+class pcc_type_table(pcc_base_table):
     def __init__(self):
-        self._types = []
+        super().__init__()
         self.typedef("void", 0, (lambda x: False))
         self.typedef("char", 4, (lambda x: is_str(x)))
         # TODO: complete
     
-    def __contains__(self, _name):
-        for _type in self._types:
-            if _type._name == _name: return True
-        return False
-
-    def __getitem__(self, _name):
-        for _type in self._types:
-            if _type._name == _name: return _type
-        return None
-
     def typedef(self, _name, _size, _assign_valid):
         if _name in self: raise Exception("Cannot override existing type")
-        self._types.append(pcc_type(_name, _size, _assign_valid))
+        self._items.append(pcc_type(_name, _size, _assign_valid))
 
 
 class pcc_operator:
@@ -52,21 +52,13 @@ class pcc_identifier:
         self._type = _type
         self._name = _name
 
-class pcc_identifier_table:
+class pcc_identifier_table(pcc_base_table):
     def __init__(self):
-        self._identifiers = []
+        super().__init__()
     
-    def __getitem__(self, _name):
-        for identifier in self._identifiers:
-            if identifier._name == _name: return identifier
-        return None
-
-    def __contains__(self, _name):
-        return self[_name] is not None
-
     def define(self, _identifier):
         if _identifier._name in self: raise Exception("Identifier already defined")
-        self._identifiers.append(_identifier)
+        self._items.append(_identifier)
         # TODO dont allow defining after existing pcc type
 
 
@@ -113,14 +105,13 @@ class pcc_literal_table:
         self._literals = literals
 
 
-class pcc_lvalue:
+class pcc_operator_table(pcc_base_table):
     def __init__(self):
-        pass
-
-
-class pcc_rvalue:
-    def __init__(self):
-        pass
+        super().__init__()
+    
+    def append(self, _operator):
+        assert(type(_operator)==pcc_operator)
+        self._items.append(_operator)
 
 
 

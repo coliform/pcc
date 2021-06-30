@@ -130,3 +130,8 @@ def replace_next_string_with_token(haystack, token=pcc_literal_token):
 
 def remove_excessive_whitespace(s):
     return " ".join(s.split())
+
+def replace_repeating_token(haystack, token=pcc_literal_token):
+    s=haystack
+    re.sub('(\$+)(\s*$+)*', '$', s)
+    return s

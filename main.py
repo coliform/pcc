@@ -9,14 +9,15 @@ import pcc_utils
 
 type_table = pcc_type_table()
 literal_table = pcc_literal_table()
+operator_table = pcc_operator_table()
 
 
 # PHASE 1
 # 1.1 - read file
 source = ""
-with open("file.c","r") as f: source=f.read()
+with open("drafts/file.c","r") as f: source=f.read()
 # 1.2 - replace trigraph characters
-for key,value in trigraphs: source = source.replace(key,value)
+for (key,value) in trigraphs: source = source.replace(key,value)
 
 
 # PHASE 2
@@ -32,3 +33,4 @@ while segment := find_next_string(source):
     source = source[:start_i] + pcc_literal_token + source[end_i+1:]
 source = remove_excessive_whitespace(source)
 
+print(source)

@@ -161,3 +161,43 @@ def replace_repeating_token(haystack, token=pcc_literal_token):
     s=haystack
     re.sub('(\$+)(\s*$+)*', '$', s)
     return s
+
+def find_scope_end(haystack,start=0,ch_start=["{",'('],ch_end=["}",')']):
+    assert(type(start)==int and start>=0) # might not detect {(}) faultyness
+    assert(type(haystack)==str and len(haystack)>0)
+    l = len(haystack)
+    i=start
+    actual_start = haystack[0]
+    if haystack[0] in ch_start: i+=1
+    scope_level = 0
+    while i<l:
+        if haystack[i] in ch_start: scope_level += 1
+        if haystack[i] in ch_end: scope_level -= 1
+        if scope_level==-1:
+            if actual_start=="{" and haystack[i]!="}" \
+                or actual_start=="(" and haystack[i]!=")": return -1
+            return i
+        i+=1
+    return -1
+
+def find_statement_end(haystack,start=0):
+    ch_start=["{",'(']
+    ch_end=["}",')']
+    assert(type(start)==int and start>=0)
+    assert(type(haystack)==str and len(haystack)>0)
+    l = len(haystack)
+    i=start
+    while i<l:
+        if haystack[i] in ch_start:
+            i = find_scope_end(haystack,i)
+            if i == -1: return -1
+            if haystack[i]=="}":
+                # compound statement end hopefully
+                return i
+            else:
+                i+=1
+                continue
+        if haystack[i]==";":
+            return i
+        i+=1
+    return -1

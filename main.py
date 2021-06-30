@@ -38,3 +38,24 @@ while segment := find_next_string(source):
 source = remove_excessive_whitespace(source)
 
 print(source)
+
+
+'''
+Compound statements belong to their adjacent left side, until we see a semicolon 
+Expression statements are followed by a semicolon
+'''
+
+def read_scope(raw):
+    scope = pcc_scope()
+    i = 0
+    l = len(raw)
+    raw_statement = ""
+    while i < l:
+        i_end = find_statement_end(raw,i)
+        if i_end == -1: die("Bad scope")
+        raw_statement = raw[i:i_end]
+        i+=1
+
+    
+
+program = read_scope(source)

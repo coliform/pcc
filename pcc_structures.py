@@ -148,6 +148,20 @@ class pcc_double_expression(pcc_expression):
 class pcc_declaration:
     pass
 
+class pcc_statement:
+    def __init__(self, raw):
+        assert(type(raw)==str)
+        # perform conversion
+        self._scope = None # scope contained BY statement
+        pass
+
+class pcc_scope:
+    def __init__(self):
+        self._statements = []
+    
+    def append(self, _statement):
+        assert(type(_statement)==pcc_statement)
+        self._statements += _statement
 
 '''class pcc_double_expression:
     # can only be initialized with an identifier

@@ -1,6 +1,11 @@
 int i=5;
 
 int main(char* argv[], int argc) {
-	i=8;
-	return 0;
+/*jijpf
+*F*F?F/*/
+\
+	i=8;		// howdy hohooo"""l"
+		return 0;			// yes
+\
+\
 }

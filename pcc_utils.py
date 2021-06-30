@@ -31,9 +31,15 @@ def die(details):
 
 def get_string_end(s,i):
     l=len(s)
-    if s[i]!='"' or (i>0 and s[i-1]=='\\'): return i
-    i+=1
-    while i<l and (s[i]!='"' or s[i-1]=='\\'): i+=1
+    assert(i>=0 and i<l)
+    str_tokens = ["\"", "\'"]
+    if s[i] not in str_tokens: return i
+    started = s[i]
+    while i<l:
+        c = s[i]
+        if c=="\\": i+=1
+        elif c==started: return i
+        i+=1
     if i==l: die("Unterminated string")
     return i
 
@@ -74,6 +80,26 @@ def remove_comments_multi(raw):
 
 def remove_comments(raw):
     return remove_comments_multi(remove_comments_single(raw))
+
+def remove_backslash_newl(raw):
+    s = raw
+    '''    i = 0
+    l = len(raw)
+    while i<l:
+        if raw[i]=="\\":
+            if i<l-1 and raw[i+1]=="\n":
+                i+=2
+                continue
+            elif i<l-2 and raw[i+1]=="\r" and raw[i+2]=="\n":
+                i+=3
+                continue
+        s += raw[i]
+        print(s)
+        i+=1'''
+    s = s.replace("\\\r\n","")
+    s = s.replace("\\\n","")
+    return s
+    
 
 def find_first_not_in_string(haystack, needle):
     l = len(haystack)
